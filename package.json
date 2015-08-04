@@ -1,0 +1,23 @@
+{
+  "name": "waller",
+  "version": "0.0.1",
+  "description": "Sync your favourite wallpapers from multiple sources",
+  "main": "main.js",
+  "scripts": {
+    "do": "node build/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grimeh/waller.git"
+  },
+  "author": "Brandon Grimshaw <br@ndon.com.au>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grimeh/waller/issues"
+  },
+  "homepage": "https://github.com/Grimeh/waller#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "^0.13.0"
+  }
+}
