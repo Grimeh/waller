@@ -1,37 +1,46 @@
 request = require 'request'
 fs = require 'fs'
-nSchedule = require 'node-schedule'
 
 base = "https://www.artstation.com/"
 artwork = "projects/"
+collections = "collections/"
 users = "users/"
 likes = "/likes.json"
 
-savePath = 'C:\\Users\\Brandon\\wallpapers'
-
-getJson = (url, callback) ->
-	request
-		url: url
-		json: true
-		, (err, resp, body) ->
-			callback body
-
 module.exports =
-	user: 'Grimeh'
+	class Waller
+		constructor: (@config) ->
+			@likes = @config.likes
+			@savePath = @config.savePath
+			@collections = @config.collections
 
-	readConfig: (configFile) ->
-		conf = JSON.parse fs.readFileSync configFile, 'utf8'
-		user = conf.user
-		savePath = conf.savePath
+		getJson: (url, callback) ->
+			request
+				url: url
+				json: true
+				, (err, resp, body) ->
+					callback body
 
-	update: () ->
-		getJson base + users + this.user + likes, (resp) ->
-			for like in resp.data
-				getJson base + artwork + like.slug + '.json', (json) ->
-					console.log 'getting ' + json.assets[0].image_url
-					request(json.assets[0].image_url).pipe(fs.createWriteStream savePath + '\\' + json.title + '.jpg') .on 'close', () ->
-						console.log 'saved'
+		downloadUserLikes: (user) ->
+			this.getJson base + users + user + likes, (resp) =>
+				for like in resp.data
+					this.getJson base + artwork + like.slug + '.json', (json) =>
+						req = request(json.assets[0].image_url)
+						req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
 
-	schedule: (minutes) ->
-		nSchedule.scheduleJob minutes + ' * * * *', () ->
-			update()
+		downloadAllUserLikes: () ->
+			for like in @likes
+				this.downloadUserLikes like
+
+		# downloadCollection: (collection) ->
+		# 	console.log 'resp: ' + base + collections + collection + '.json'
+		# 	this.getJson base + collections + collection + '.json', (resp) =>
+		# 		console.log 'resp: ' + resp
+		# 		for project in resp.projects
+		# 			this.getJson base + artwork + project.slug + '.json', (json) =>
+		# 				req = request(json.assets[0].image_url)
+		# 				req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
+		#
+		# downloadAllCollections: () ->
+		# 	for collection in @collections
+		# 		this.downloadCollection collection

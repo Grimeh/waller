@@ -1,12 +1,8 @@
-install = require './windows.js'
 waller = require './waller.js'
+fs = require 'fs'
 
-for arg in process.argv
-	if arg is 'install'
-		install()
-	# else if arg is 'run'
-	# 	waller.update()
-	# 	waller.schedule()
+conf = JSON.parse fs.readFileSync './conf.json', 'utf8'
 
-waller.update()
-waller.schedule()
+wall = new waller conf
+# wall.downloadAllCollections()
+wall.downloadAllUserLikes()
