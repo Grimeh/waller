@@ -26,6 +26,7 @@ module.exports =
 				for like in resp.data
 					this.getJson base + artwork + like.slug + '.json', (json) =>
 						req = request(json.assets[0].image_url)
+						json.title = json.title.replace /\/|\\/g, "-"
 						req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
 
 		downloadAllUserLikes: () ->
