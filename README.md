@@ -1,5 +1,6 @@
 # [Waller](https://github.com/Grimeh/Waller)
-*Sync your favourite wallpapers from multiple sources*
+*Sync your favourite wallpapers from ArtStation*
+Only *ArtStation* user likes are currently available, but plans exist to add other sites like *DeviantArt* as sources.
 
 ## Setup
  1. Must have node and npm installed.
