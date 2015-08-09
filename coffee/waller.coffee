@@ -9,10 +9,11 @@ likes = "/likes.json"
 
 module.exports =
 	class Waller
-		constructor: (@config) ->
-			@likes = @config.likes
-			@savePath = @config.savePath
-			@collections = @config.collections
+		constructor: (config) ->
+			@likes = config.likes
+			@savePath = config.savePath
+			@collections = config.collections
+			@debug = config.debug
 
 		getJson: (url, callback) ->
 			request
@@ -23,10 +24,13 @@ module.exports =
 
 		downloadUserLikes: (user) ->
 			this.getJson base + users + user + likes, (resp) =>
+				if @debug
+					console.log resp
 				for like in resp.data
 					this.getJson base + artwork + like.slug + '.json', (json) =>
 						req = request(json.assets[0].image_url)
 						json.title = json.title.replace /\/|\\/g, "-"
+						console.log 'Saving image: ' + json.title
 						req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
 
 		downloadAllUserLikes: () ->
