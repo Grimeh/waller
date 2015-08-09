@@ -8,12 +8,12 @@
 
 ## Configuration
 Edit `conf.json` and change the following parameters to suit your preferences:
- - savePath
- 	You must set this to where you want your wallpapers saved to. Please ensure that the directory exists and can be written to by node.
- - likes
- 	For each user whose likes you would like to download, put their **username** in this array.
- - time
- 	Time in seconds you would like to update. Useful if using [forever](https://github.com/foreverjs/forever) or [pm2](https://github.com/Unitech/pm2). Delete the parameter if you do not want it to repeat.
+ - **savePath**
+  - You must set this to where you want your wallpapers saved to. Please ensure that the directory exists and can be written to by node.
+ - **likes**
+  - For each user whose likes you would like to download, put their **username** in this array.
+ - **time**
+  - Time in seconds you would like to update. Useful if using [forever](https://github.com/foreverjs/forever) or [pm2](https://github.com/Unitech/pm2). Delete the parameter if you do not want it to repeat.
 
 ## Usage
 ### General
