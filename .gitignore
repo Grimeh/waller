@@ -27,7 +27,7 @@ build/Release
 node_modules
 
 # Output directory
-#build
+build
 *.jpg
 
 .sass-cache
