@@ -22,6 +22,10 @@ module.exports =
 				, (err, resp, body) ->
 					callback body
 
+		getUserLikes: (user, callback) ->
+			this.getJson base + users + user + likes, (resp) =>
+				callback resp.data
+
 		downloadUserLikes: (user) ->
 			this.getJson base + users + user + likes, (resp) =>
 				if @debug
@@ -36,6 +40,9 @@ module.exports =
 		downloadAllUserLikes: () ->
 			for like in @likes
 				this.downloadUserLikes like
+
+		getProjectInfo: (projectSlug, callback) ->
+			getJson base + artwork + slug + '.json', callback
 
 		# downloadCollection: (collection) ->
 		# 	console.log 'resp: ' + base + collections + collection + '.json'

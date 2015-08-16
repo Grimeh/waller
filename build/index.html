@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Waller</title>
+
+	<link href='style.css' rel="stylesheet" type="text/css">
+	<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+
+	<script id='imageTemplate' type="text/x-handlebars-template">
+		{{#each likes}}
+		<img src="{{cover.medium_image_url}}"/>
+		{{/each}}
+	</script>
+</head>
+<body>
+	<div id='container'>
+		<!-- <a href='#' id='col1'></a>
+		<a href='#' id='col2'></a>
+		<a href='#' id='col3'></a> -->
+	</div>
+
+	<script src="page.js"></script>
+</body>

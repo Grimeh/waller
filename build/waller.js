@@ -32,6 +32,14 @@
       });
     };
 
+    Waller.prototype.getUserLikes = function(user, callback) {
+      return this.getJson(base + users + user + likes, (function(_this) {
+        return function(resp) {
+          return callback(resp.data);
+        };
+      })(this));
+    };
+
     Waller.prototype.downloadUserLikes = function(user) {
       return this.getJson(base + users + user + likes, (function(_this) {
         return function(resp) {

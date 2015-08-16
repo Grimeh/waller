@@ -29,3 +29,5 @@ node_modules
 # Output directory
 #build
 *.jpg
+
+.sass-cache
