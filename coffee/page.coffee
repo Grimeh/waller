@@ -4,6 +4,7 @@ fs = require 'fs'
 $ = require 'jquery'
 
 conf = JSON.parse fs.readFileSync './conf.json', 'utf8'
+# conf.debug = true
 waller = new Waller conf
 
 source = $('#imageTemplate').html()
@@ -15,14 +16,15 @@ grid =
 	y: container.height() / 100
 
 waller.getUserLikes waller.likes[0], (likes) =>
-	for like in likes
-		waller.getProjectInfo like.slug, () =>
-			
-
-			result = template like
-			$('#col' + i++ % 3).append result
-
-	# result = template
-	# 	likes: likes
+	# console.log 'likes: ' + likes.length
+	# for like in likes
+	# 	waller.getProjectInfo like.slug, () =>
 	#
-	# container.append result
+	#
+	# 		result = template like
+	# 		$('#col' + i++ % 3).append result
+
+	result = template
+		likes: likes
+
+	container.append result
