@@ -44,8 +44,8 @@ module.exports =
 
 		downloadUserLikes: (user) ->
 			# this.getJson base + users + user + likes, (resp) =>
-			this.getUserLikes user, (resp) ->
-				for like in resp.data
+			this.getUserLikes user, (resp) =>
+				for like in resp
 					this.getJson base + artwork + like.slug + '.json', (json) =>
 						req = request(json.assets[0].image_url)
 						json.title = json.title.replace /\/|\\/g, "-"
