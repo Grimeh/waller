@@ -1,4 +1,4 @@
-div {
+#container {
 	-moz-column-count: 3;
     -moz-column-gap: 10px;
     -webkit-column-count: 3;
@@ -11,5 +11,20 @@ div {
 		display: inline-block;
 		margin-bottom: 20px;
 		width: 100%;
+	}
+}
+
+#searchbox {
+	position: absolute;
+	left: 5%;
+
+	width: 90%;
+	height: 50px;
+
+	input {
+		position: absolute;
+		width: 100%;
+		margin: 0 auto;
+		top: 10px;
 	}
 }
