@@ -3,19 +3,29 @@
 <head>
 	<title>Waller</title>
 
+	<script
+		src='bower_components/webcomponentsjs/webcomponents-lite.min.js'></script>
+	<link rel='import'
+		href='bower_components/paper-input/paper-input.html'>
+	<link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+	<link rel="import" href="bower_components/paper-card/paper-card.html">
+
+
 	<link href='style.css' rel="stylesheet" type="text/css">
 	<script src='../node_modules/jquery/dist/jquery.min.js'></script>
 
 	<script id='imageTemplate' type="text/x-handlebars-template">
 		{{#each likes}}
-		<img src="{{cover.medium_image_url}}"/>
+		<paper-card elevation='1'>
+			<img src="{{cover.medium_image_url}}"/>
+		</paper-card>
 		{{/each}}
 	</script>
 </head>
 <body>
-	<div id='searchbox'>
-		<input id='user-input' placeholder="Search Users"></input>
-	</div>
+	<paper-toolbar>
+		<paper-input id='user-input' label="Search Users"></paper-input>
+	</paper-toolbar>
 
 	<div id='container'>
 		<!-- <a href='#' id='col1'></a>

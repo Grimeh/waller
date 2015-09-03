@@ -31,3 +31,6 @@ build
 *.jpg
 
 .sass-cache
+
+# bower
+bower_components

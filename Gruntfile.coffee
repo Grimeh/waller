@@ -15,6 +15,10 @@ module.exports = (grunt) ->
 			sass:
 				src: 'html/index.html'
 				dest: 'build/index.html'
+			bower:
+				expand: true
+				src: 'bower_components/**'
+				dest: 'build/'
 		sass:
 			compile:
 				files:
