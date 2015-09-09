@@ -5,12 +5,21 @@
     -webkit-column-gap: 10px;
     column-count: 3;
     column-gap: 10px;
-    width: 100%;
 
-	img {
+    width: 100%;
+	padding-top: 74px;
+
+	background: #DDDDDD;
+
+	paper-card {
 		display: inline-block;
 		margin-bottom: 10px;
 		width: 100%;
+
+		img {
+			width: 90%;
+			padding: 10px;
+		}
 	}
 }
 
@@ -22,12 +31,9 @@ paper-toolbar {
 	position: fixed;
 	width: 100%;
 
+	z-index: 100;
+
 	paper-input {
 		padding-left: 72px;
-
 	}
-}
-
-#container {
-	padding-top: 74px;
 }
