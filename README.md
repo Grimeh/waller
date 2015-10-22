@@ -24,8 +24,6 @@ For general usage `node build\main.js` will work just fine after configuration.
 As requested, Windows users have some handy batch files for creating a desktop shortcut, if you'd rather run the script manually than use the scheduling. Just run `shortcut.bat` and a shortcut called *Waller* pointing to `run.bat` will appear on your desktop.
 
 ## License
-The MIT License (MIT)
-
 Copyright (c) 2015 Brandon Grimshaw
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
