@@ -50,6 +50,7 @@ module.exports =
 						req = request(json.assets[0].image_url)
 						json.title = json.title.replace /\/|\\/g, "-"
 						json.title = json.title.replace /\"/g, ""
+						json.title = json.title.replace /\'/g, ""
 						console.log 'Saving image: ' + json.title
 						req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
 
