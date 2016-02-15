@@ -23,8 +23,6 @@ module.exports =
 				url: url
 				json: true
 				, (err, resp, body) ->
-					if @debug
-						console.log 'json resp: ' + body
 					callback body
 
 		getUserLikes: (user, callback, page = 1, appendTo = null) ->
@@ -51,6 +49,7 @@ module.exports =
 						json.title = json.title.replace /\/|\\/g, "-"
 						json.title = json.title.replace /\"/g, ""
 						json.title = json.title.replace /\'/g, ""
+						json.title = json.title.replace /\?/g, ""
 						console.log 'Saving image: ' + json.title
 						req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
 
