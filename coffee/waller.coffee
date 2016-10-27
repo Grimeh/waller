@@ -1,6 +1,7 @@
 request = require 'request'
 fs = require 'fs'
 async = require 'async'
+path = require 'path'
 
 # consts
 base = "https://www.artstation.com/"
@@ -37,7 +38,7 @@ module.exports =
 					callback body
 
 		getProjectInfo: (projectSlug, callback) ->
-			@getJson base + artwork + slug + '.json', callback
+			@getJson base + artwork + projectSlug + '.json', callback
 
 		getUserInfo: (user, callback) ->
 			@getJson base + users + user + '.json', callback
@@ -51,7 +52,13 @@ module.exports =
 
 		getUserLikes: (user, callback) ->
 			@getUserInfo user, (resp) =>
-				numPages = Math.ceil(resp.liked_projects_count / likesPerPage)
+				# limit the number of projects we consider
+				count = resp.liked_projects_count
+				count = Math.min(count, @limit) if @limit > 0
+				# how many pages do we need to fetch
+				numPages = Math.ceil(count / likesPerPage)
+
+				# queue up our requests
 				queue = new Array()
 				makeGet = (user, page) =>
 					return (callback) =>
@@ -61,25 +68,50 @@ module.exports =
 				for i in [0...numPages]
 					queue.push makeGet user, i
 
-				console.log 'user likes: ' + queue.length
+				if @debug
+					console.log 'user likes: ' + queue.length
+
 				async.parallelLimit queue, 5, (err, results) ->
 					result = new Array()
 					for x in results
 						result = result.concat x
 					callback result
 
-				# this.getUserLikes user, (resp) =>
-				# 	for like in resp
-				# 		@getJson base + artwork + like.slug + '.json', (json) =>
-				# 			req = request(json.assets[0].image_url)
-				# 			json.title = json.title.replace /\/|\\/g, "-"
-				# 			json.title = json.title.replace /\"/g, ""
-				# 			json.title = json.title.replace /\'/g, ""
-				# 			json.title = json.title.replace /\?/g, ""
-				# 			console.log 'Saving image: ' + json.title
-				# 			req.pipe fs.createWriteStream this.savePath + '\\' + json.title + '.jpg'
+		saveImage: (url, savePath) ->
+			if @debug
+				console.log 'saving image: ' + savePath
+			req = request url
+			req.pipe fs.createWriteStream savePath
+
+		downloadProjectImage: (projectHash) ->
+			@getProjectInfo projectHash, (projInfo) =>
+				asset = null
+				for x in projInfo.assets when x.has_image
+					asset = x
+					break
+
+				if not x?
+					console.log 'Error: Could not find suitable image asset for project ' + projInfo.title
+					return null
+
+				# get rid of illegal chars
+				projInfo.title = projInfo.title.replace /\/|\\/g, "-"
+				projInfo.title = projInfo.title.replace /\"/g, ""
+				projInfo.title = projInfo.title.replace /\'/g, ""
+				projInfo.title = projInfo.title.replace /\?/g, ""
+
+				# extract file extension
+				ext = x.image_url.match(/(\.[A-z][A-z][A-z])\?/)[1]
+				projInfo.title += ext
+
+				savePath = path.format
+					dir: @savePath
+					base: projInfo.title
+
+				@saveImage x.image_url, savePath
 
 		downloadAllUserLikes: () ->
 			for user in @usernames
-				this.getUserLikes user, (likes) ->
-					# TODO download images with async
+				@getUserLikes user, (likes) =>
+					like = likes[0]
+					@downloadProjectImage like.hash_id
