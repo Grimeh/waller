@@ -1,6 +1,8 @@
 {
 	"savePath": "C:\\wallpapers\\",
-	"likes": [
+	"usernames": [
 		"Grimeh"
-	]
+	],
+	"limit": 0,
+	"debug": true
 }
