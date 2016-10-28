@@ -3,34 +3,38 @@
 <head>
 	<title>Waller</title>
 
-	<script
-		src='bower_components/webcomponentsjs/webcomponents-lite.min.js'></script>
-	<link rel='import'
-		href='bower_components/paper-input/paper-input.html'>
-	<link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
-	<link rel="import" href="bower_components/paper-card/paper-card.html">
-
-
 	<link href='style.css' rel="stylesheet" type="text/css">
-	<script src='../node_modules/jquery/dist/jquery.min.js'></script>
 
-	<script id='imageTemplate' type="text/x-handlebars-template">
-		{{#each likes}}
-		<paper-card elevation='1'>
-			<img src="{{cover.medium_image_url}}"/>
-		</paper-card>
-		{{/each}}
-	</script>
 </head>
 <body>
-	<paper-toolbar>
-		<paper-input id='user-input' label="Search Users"></paper-input>
-	</paper-toolbar>
+	<div class="topBar">
+		<div class="header">Waller</div>
+		<div id="closeButton">X</div>
+	</div>
 
-	<div id='container'>
-		<!-- <a href='#' id='col1'></a>
-		<a href='#' id='col2'></a>
-		<a href='#' id='col3'></a> -->
+	<div class="row">
+		<div class="container username">
+			<div class="label">Username</div>
+			<input id="usernameInput" type="text" />
+		</div>
+		<div class="container limit">
+			<div class="label">Limit</div>
+			<input id="limitInput" type="number" min='0' value="0" />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="container save">
+			<div class="label">Save Location</div>
+			<div class="inputs">
+				<input id="saveDirInput" type="text" />
+				<div id="saveDirBrowseButton" class="button">Browse</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div id='beginButton' class='button'>Download</div>
 	</div>
 
 	<script src="page.js"></script>

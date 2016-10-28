@@ -1,39 +1,150 @@
-#container {
-	-moz-column-count: 3;
-    -moz-column-gap: 10px;
-    -webkit-column-count: 3;
-    -webkit-column-gap: 10px;
-    column-count: 3;
-    column-gap: 10px;
+@font-face {
+	font-family: 'Roboto';
+	src: local('Roboto'),
+		local('Roboto-Regular'),
+		url('fonts/Roboto-Regular.ttf');
+}
 
-    width: 100%;
-	padding-top: 74px;
+$primaryColour: #3F51B5;
+$backgroundColour: #E8EAF6;
+$lightColour: #C5CAE9;
+$hoverColour: #9FA8DA;
+$clickColour: #7986CB;
+$heavyColour: #1A237E;
 
-	background: #DDDDDD;
+$accentColour: #69F0AE;
+$accentLightColour: #B9F6CA;
+$accentDarkColour: #00E676;
 
-	paper-card {
+$textColour: #000000;
+$primaryTextOpacity: 0.87;
+$secondaryTextOpacity: 0.54;
+$hintTextOpacity: 0.38;
+
+$font: 'Roboto';
+
+@mixin unselectable() {
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	cursor: default;
+}
+
+body {
+	background-color: $backgroundColour;
+	font-family: $font;
+	margin: 0;
+	color: rgba($textColour, $primaryTextOpacity);
+}
+
+.topBar {
+	background-color: $primaryColour;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
+	width: 100%;
+	height: 25px;
+
+	div {
+		height: 100%;
+		line-height: 25px;
 		display: inline-block;
-		margin-bottom: 10px;
-		width: 100%;
+	}
 
-		img {
-			width: 90%;
-			padding: 10px;
+	.header {
+		@include unselectable();
+		margin-left: 10px;
+		width: 90%;
+		-webkit-app-region: drag;
+	}
+
+	#closeButton {
+		cursor: default;
+
+		width: 25px;
+
+		text-align: center;
+		vertical-align: middle;
+		float: right;
+
+		background-color: $accentColour;
+
+		&:hover {
+			background-color: $accentDarkColour;
 		}
 	}
 }
 
-body {
-	margin: 0;
+.row {
+	margin: 10px;
+	width: auto;
+
+	.container {
+		display: inline-block;
+	}
 }
 
-paper-toolbar {
-	position: fixed;
+.username {
+	width: 80%;
+
+	input {
+		width: 90%;
+	}
+}
+
+.limit {
+	width: 20%;
+	float: right;
+
+	input {
+		width: 93%;
+	}
+}
+
+.label {
+	@include unselectable();
+	font-size: small;
+}
+
+.save {
 	width: 100%;
 
-	z-index: 100;
+	.inputs {
+		width: 100%;
 
-	paper-input {
-		padding-left: 72px;
+		* {
+			display: inline-block;
+		}
+
+		input {
+			display: inline-block;
+			width: calc(97% - 70px);
+		}
+
+		div {
+			display: inline-block;
+			float: right;
+			width: 70px;
+			text-align: center;
+		}
 	}
+}
+
+.button {
+	@include unselectable();
+	background-color: $lightColour;
+	text-align: center;
+	vertical-align: middle;
+
+	&:hover {
+		background-color: $hoverColour;
+	}
+
+	&:active {
+		background-color: $clickColour;
+	}
+}
+
+#beginButton {
+	margin-top: 20px;
+	width: 100%;
 }

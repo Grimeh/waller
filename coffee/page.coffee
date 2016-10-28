@@ -1,30 +1,33 @@
-handlebars = require 'handlebars'
-Waller = require './waller'
 fs = require 'fs'
 $ = require 'jquery'
+electron = require 'electron'
 
-conf = JSON.parse fs.readFileSync './conf.json', 'utf8'
-# conf.debug = true
-waller = new Waller conf
+# populate field with current config
+conf = electron.remote.getGlobal 'conf'
 
-source = $('#imageTemplate').html()
-template = handlebars.compile source
+$('#usernameInput').val conf.usernames[0]
+$('#limitInput').val conf.limit
+$('#saveDirInput').val conf.savePath
 
-container = $('#container')
-grid =
-	x: container.width() / 100
-	y: container.height() / 100
+# main process comms
+ipcRenderer = electron.ipcRenderer
+ipcRenderer.on 'savePathUpdated', (event, arg) =>
+	$('#saveDirInput').val conf.savePath
+	
+ipcRenderer.on 'done', (event, arg) =>
+	console.log 'DOWNLOADING COMPLETED'
 
-waller.getUserLikes waller.likes[0], (likes) =>
-	# console.log 'likes: ' + likes.length
-	# for like in likes
-	# 	waller.getProjectInfo like.slug, () =>
-	#
-	#
-	# 		result = template like
-	# 		$('#col' + i++ % 3).append result
+$('#saveDirBrowseButton').on 'click', () ->
+	ipcRenderer.send 'browse'
 
-	result = template
-		likes: likes
+$('#beginButton').on 'click', () ->
+	ipcRenderer.send 'download',
+		username: $('#usernameInput').val()
+		limit: $('#limitInput').val()
+		savePath: $('#saveDirInput').val()
 
-	container.append result
+
+# close button callback
+$('#closeButton').on 'click', () ->
+	console.log 'closing window'
+	window.close()
