@@ -25,7 +25,7 @@ module.exports =
 
 			@done = false
 
-		getJson: (url, callback) ->
+		getJson: (url, callback) =>
 			if @debug
 				console.log 'json req: ' + url
 
@@ -37,20 +37,20 @@ module.exports =
 						console.log 'json resp: ' + resp + ':' + body
 					callback body
 
-		getProjectInfo: (projectSlug, callback) ->
+		getProjectInfo: (projectSlug, callback) =>
 			@getJson base + artwork + projectSlug + '.json', callback
 
-		getUserInfo: (user, callback) ->
+		getUserInfo: (user, callback) =>
 			@getJson base + users + user + '.json', callback
 
-		getUserLikePage: (user, page, callback) ->
+		getUserLikePage: (user, page, callback) =>
 			# Get page #[page] of [user]'s likes
 			url = base + users + user + '/' + likes + '?page=' + page
 
 			@getJson url, (resp) =>
 				callback resp.data
 
-		getUserLikes: (user, callback) ->
+		getUserLikes: (user, callback) =>
 			@getUserInfo user, (resp) =>
 				# limit the number of projects we consider
 				count = resp.liked_projects_count
@@ -77,13 +77,15 @@ module.exports =
 						result = result.concat x
 					callback result
 
-		saveImage: (url, savePath) ->
+		saveImage: (url, savePath, callback) =>
 			if @debug
 				console.log 'saving image: ' + savePath
 			req = request url
 			req.pipe fs.createWriteStream savePath
+			if callback?
+				callback()
 
-		downloadProjectImage: (projectHash) ->
+		downloadProjectImage: (projectHash, callback) =>
 			@getProjectInfo projectHash, (projInfo) =>
 				asset = null
 				for x in projInfo.assets when x.has_image
@@ -96,9 +98,7 @@ module.exports =
 
 				# get rid of illegal chars
 				projInfo.title = projInfo.title.replace /\/|\\/g, "-"
-				projInfo.title = projInfo.title.replace /\"/g, ""
-				projInfo.title = projInfo.title.replace /\'/g, ""
-				projInfo.title = projInfo.title.replace /\?/g, ""
+				projInfo.title = projInfo.title.replace /\"|\'|\:|\?/g, ""
 
 				# extract file extension
 				ext = x.image_url.match(/(\.[A-z][A-z][A-z])\?/)[1]
@@ -108,10 +108,17 @@ module.exports =
 					dir: @savePath
 					base: projInfo.title
 
-				@saveImage x.image_url, savePath
+				@saveImage x.image_url, savePath, callback
 
-		downloadAllUserLikes: () ->
+		downloadAllUserLikes: (callback) =>
 			for user in @usernames
 				@getUserLikes user, (likes) =>
-					like = likes[0]
-					@downloadProjectImage like.hash_id
+					i = 0
+					likes = (like.hash_id for like in likes)
+					if @limit > 0 and likes.length > @limit
+						likes = likes.slice 0, @limit
+					async.eachLimit likes, 5, @downloadProjectImage, (err) =>
+						if @debug
+							console.log 'Downloading done'
+						if callback?
+							callback err
