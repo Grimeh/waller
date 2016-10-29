@@ -5,7 +5,7 @@ electron = require 'electron'
 # populate field with current config
 conf = electron.remote.getGlobal 'conf'
 
-$('#usernameInput').val conf.usernames[0]
+$('#usernameInput').val conf.username
 $('#limitInput').val conf.limit
 $('#saveDirInput').val conf.savePath
 
@@ -13,7 +13,7 @@ $('#saveDirInput').val conf.savePath
 ipcRenderer = electron.ipcRenderer
 ipcRenderer.on 'savePathUpdated', (event, arg) =>
 	$('#saveDirInput').val conf.savePath
-	
+
 ipcRenderer.on 'done', (event, arg) =>
 	console.log 'DOWNLOADING COMPLETED'
 

@@ -12,13 +12,19 @@ module.exports = (grunt) ->
 			json:
 				src: 'conf.json'
 				dest: 'build/conf.json'
-			sass:
-				src: 'html/index.html'
-				dest: 'build/index.html'
+			html:
+				expand: true
+				flatten: true
+				src: 'html/*'
+				dest: 'build/'
+			fonts:
+				files: [{ expand: true, src: ['fonts/*'], dest: 'build/', filter: 'isFile' }]
 		sass:
 			compile:
 				files:
-					'build/style.css': 'sass/style.scss'
+					'build/_common.css': 'sass/_common.scss'
+					'build/style_index.css': 'sass/style_index.scss'
+					'build/style_progress.css': 'sass/style_progress.scss'
 		watch:
 			files: ['coffee/*.coffee']
 			tasks: ['default']

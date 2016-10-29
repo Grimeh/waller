@@ -1,0 +1,43 @@
+@font-face {
+	font-family: 'Roboto';
+	src: local('Roboto'),
+		local('Roboto-Regular'),
+		url('fonts/Roboto-Regular.ttf');
+}
+
+$primaryColour: #3F51B5;
+$backgroundColour: #E8EAF6;
+$lightColour: #C5CAE9;
+$hoverColour: #9FA8DA;
+$clickColour: #7986CB;
+$heavyColour: #1A237E;
+
+$accentColour: #69F0AE;
+$accentLightColour: #B9F6CA;
+$accentDarkColour: #00E676;
+
+$textColour: #000000;
+$primaryTextOpacity: 0.87;
+$secondaryTextOpacity: 0.54;
+$hintTextOpacity: 0.38;
+
+$font: 'Roboto';
+
+@mixin unselectable() {
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	cursor: default;
+}
+
+body {
+	background-color: $backgroundColour;
+	font-family: $font;
+	margin: 0;
+	color: rgba($textColour, $primaryTextOpacity);
+}
+
+.label {
+	@include unselectable();
+	font-size: small;
+}

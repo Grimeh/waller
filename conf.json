@@ -1,8 +1,1 @@
-{
-	"savePath": "C:\\wallpapers\\",
-	"usernames": [
-		"Grimeh"
-	],
-	"limit": 20,
-	"debug": true
-}
+{"username":"Grimeh","limit":"20","debug":false,"savePath":"C:\\wallpapers","maxParallelRequests":4}

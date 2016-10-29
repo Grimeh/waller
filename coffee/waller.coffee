@@ -15,15 +15,15 @@ module.exports =
 	class Waller
 		constructor: (config) ->
 			# Username
-			@usernames = config.usernames
+			@username = config.username
 			# Where to download images to
 			@savePath = config.savePath
 			# Print debug info
 			@debug = config.debug
 			# Max no. downloaded images (0 = unlimited)
 			@limit = config.limit
-
-			@done = false
+			@progress = 0.0
+			@parallelLimit = config.maxParallelRequests
 
 		getJson: (url, callback) =>
 			if @debug
@@ -33,8 +33,13 @@ module.exports =
 				url: url
 				json: true
 				, (err, resp, body) ->
+					if err?
+						console.log 'json request error: ' + err
+						return
+
 					if @debug
-						console.log 'json resp: ' + resp + ':' + body
+						console.log 'json request response: ' + resp.statusCode
+
 					callback body
 
 		getProjectInfo: (projectSlug, callback) =>
@@ -71,7 +76,7 @@ module.exports =
 				if @debug
 					console.log 'user likes: ' + queue.length
 
-				async.parallelLimit queue, 5, (err, results) ->
+				async.parallelLimit queue, @parallelLimit, (err, results) ->
 					result = new Array()
 					for x in results
 						result = result.concat x
@@ -80,10 +85,22 @@ module.exports =
 		saveImage: (url, savePath, callback) =>
 			if @debug
 				console.log 'saving image: ' + savePath
-			req = request url
-			req.pipe fs.createWriteStream savePath
-			if callback?
-				callback()
+
+			request.get url
+
+				.on 'response', (resp) =>
+					if @debug
+						console.log 'image request response: ' + resp.statusCode
+						console.log 'image request content type: ' + resp.headers['content-type']
+
+				.on 'error', (err) =>
+					console.error 'image request error: ' + error
+
+				.pipe fs.createWriteStream savePath
+
+				.on 'close', () =>
+					if callback?
+						callback()
 
 		downloadProjectImage: (projectHash, callback) =>
 			@getProjectInfo projectHash, (projInfo) =>
@@ -97,7 +114,7 @@ module.exports =
 					return null
 
 				# get rid of illegal chars
-				projInfo.title = projInfo.title.replace /\/|\\/g, "-"
+				projInfo.title = projInfo.title.replace /\/|\\|\|/g, "-"
 				projInfo.title = projInfo.title.replace /\"|\'|\:|\?/g, ""
 
 				# extract file extension
@@ -111,14 +128,20 @@ module.exports =
 				@saveImage x.image_url, savePath, callback
 
 		downloadAllUserLikes: (callback) =>
-			for user in @usernames
-				@getUserLikes user, (likes) =>
-					i = 0
-					likes = (like.hash_id for like in likes)
-					if @limit > 0 and likes.length > @limit
-						likes = likes.slice 0, @limit
-					async.eachLimit likes, 5, @downloadProjectImage, (err) =>
-						if @debug
-							console.log 'Downloading done'
-						if callback?
-							callback err
+			@getUserLikes @username, (likes) =>
+				i = 0
+				likes = (like.hash_id for like in likes)
+				if @limit > 0 and likes.length > @limit
+					likes = likes.slice 0, @limit
+				totalCount = likes.length
+
+				download = (item, callback) =>
+					@progress += 1.0 / totalCount
+					console.log '' + Math.floor(@progress * 100) + '% downloading underway'
+					@downloadProjectImage item, callback
+
+				async.eachLimit likes, @parallelLimit, download, (err) =>
+					if @debug
+						console.log 'Downloading done'
+					if callback?
+						callback err

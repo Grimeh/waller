@@ -12,11 +12,12 @@ mainWindow = null
 
 createWindow = =>
 	mainWindow = new BrowserWindow
-		width: 800
-		height: 400
+		width: 370
+		height: 170
+		resizable: false
 		frame: false
 	mainWindow.loadURL "file://#{__dirname}/index.html"
-	mainWindow.webContents.openDevTools()
+	# mainWindow.webContents.openDevTools()
 	mainWindow.on 'closed', =>
 		mainWindow = null
 
@@ -39,10 +40,16 @@ ipcMain.on 'browse', (event, arg) =>
 			event.sender.send 'savePathUpdated'
 
 ipcMain.on 'download', (event, arg) =>
-	conf.limit = arg.limit
-	conf.savePath = arg.savePath
-	conf.usernames[0] = arg.username
+	# update config
+	global.conf.limit = arg.limit
+	global.conf.savePath = arg.savePath
+	global.conf.username = arg.username
+	fs.writeFileSync './conf.json', JSON.stringify global.conf, 'utf-8'
 
-	waller = new Waller global.conf
-	waller.downloadAllUserLikes () =>
-		event.sender.send 'done'
+	# display progress
+	mainWindow.loadURL "file://#{__dirname}/progress.html"
+	mainWindow.setSize 370, 60, true
+
+	global.waller = new Waller global.conf
+	global.waller.downloadAllUserLikes () =>
+		mainWindow.close() # should close app
